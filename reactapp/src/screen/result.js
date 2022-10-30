@@ -10,7 +10,8 @@ import {
     sendData,
     getData,
   } from "../config/firebaseMethods";
-import { Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
+import { Box } from "@mui/system";
 const Result = () => {
   const [dbObj, setDbObj] = useState({});
   const location = useLocation();
@@ -48,7 +49,36 @@ setDbObj(data)
     <>
       {console.log(dbObj)}
       {/* {dbObj.map((e,i)=>( */}
-        <>
+      <Grid
+        container
+        sx={{
+          backgroundColor: "#A04EF6",
+
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        {/* item grid */}
+        <Grid
+          item
+          sx={{
+            borderRadius: 5,
+            backgroundColor: "#E7D045",
+            maxWidth: "90%",
+            marginY: 1,
+            // marginX: { md: 5, sx: 1 },
+            paddingY: 1,
+            // paddingX: { md: 5, sx: 1 },
+            display: "flex",
+            flexDirection: "column",
+            // alignContent: "center",
+          }}
+        >
+   
+  <Box sx={{margin:'1rem',padding:'0.5rem'}}>
+        
 <h1>
     {`First Name: ${dbObj.firstName? dbObj.firstName: "not enterd" }`}</h1>
 
@@ -61,12 +91,11 @@ setDbObj(data)
 <h1>{`fatherCnic : ${dbObj.fatherCnic? dbObj.fatherCnic: "not enterd" }`}</h1>
 <h1>{`fatherContact : ${dbObj.fatherContact? dbObj.fatherContact: "not enterd" }`}</h1>
 <h1>{`emergencyContact : ${dbObj.emergencyContact? dbObj.emergencyContact: "not enterd" }`}</h1>
-        
+     </Box> 
+      </Grid>  
+      </Grid>  
         </>
-
-      {/* ))} */}
-     
-    </>
+  
   );
 };
 

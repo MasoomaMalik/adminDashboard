@@ -14,7 +14,7 @@ const Login = () => {
     loginUser({email, password})
     .then((success)=>{console.log(success)
       setLoader(false);
-    navigate(`/home/${success.id}`)
+    navigate(`/dashboard/${success.id}`)
     }
       )
     .catch((err)=>{console.log(err)

@@ -13,6 +13,7 @@ import { uid } from "uid";
 import { useNavigate, useLocation, useParams, Link } from "react-router-dom";
 import MyInput from "../components/myInput";
 import MySelect from "../components/mySelect";
+import MyResponsiveDrawer from "../components/drawer";
 const Home = ({ children }) => {
   const params = useParams();
   const [userId, setUserId] = useState("");
