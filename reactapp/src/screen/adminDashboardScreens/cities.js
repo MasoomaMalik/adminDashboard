@@ -1,16 +1,22 @@
 import { Grid } from "@mui/material";
 import { Container } from "@mui/system";
 import { useEffect, useState } from "react";
-import SMButton from "../../config/components/SMButton";
-import SMGrid from "../../config/components/SMGrid";
-import SMInput from "../../config/components/SMInput";
-import SMSelect from "../../config/components/SMSelect";
-import { getData, sendData } from "../../config/firebasemethods";
+import MyFbSelect from "../../components/myFbSelect";
+// import SMButton from "../../config/components/SMButton";
+import MyGrid from "../../components/myGrid";
+// import MySelect from "../../components/mySelect";
+import {
+  Button,
+   
+} from "@mui/material";
+import MyInput from "../../components/myInput";
+// import MySelect from "../../config/components/mySelect";
+import { getData, sendData } from "../../config/firebaseMethods";
 
 function Cities() {
   const [model, setModel] = useState({});
   const [citiesList, setCitiesList] = useState([]);
-
+const arr=["pakistan","canada"]
   let saveCity = () => {
     console.log(model);
     sendData(model, "cities")
@@ -43,7 +49,9 @@ function Cities() {
         <Container>
           <Grid container>
             <Grid sx={{ padding: 2 }} md={4} item>
-              <SMSelect
+              <MyFbSelect
+
+              // arr={arr}
                 displayField="countryName"
                 valueField="countryCode"
                 label="Country"
@@ -54,32 +62,38 @@ function Cities() {
               />
             </Grid>
             <Grid sx={{ padding: 2 }} md={4} item>
-              <SMInput
+              <MyInput
                 label="City Name"
+                focused
+                color={"primary"}
+                variant={"filled"}
                 onChange={(e) =>
                   setModel({ ...model, cityName: e.target.value })
                 }
               />
             </Grid>
             <Grid sx={{ padding: 2 }} md={4} item>
-              <SMInput
+              <MyInput
                 label="City Code"
+                focused
+                color={"primary"}
+                variant={"filled"}
                 onChange={(e) =>
                   setModel({ ...model, cityCode: e.target.value })
                 }
               />
             </Grid>
             <Grid md={4} item>
-              <SMButton onClick={saveCity} label="Save" />
+              <Button variant="contained" onClick={saveCity}>Save</Button>
             </Grid>
           </Grid>
         </Container>
         <Container>
-          <SMGrid
+          <MyGrid
             datasource={citiesList}
             Cols={[
               {
-                key: "id",
+                 key: "id",
                 displayName: "Id",
               },
               {

@@ -7,30 +7,27 @@ import MyInput from "../../components/myInput";
 import MySelect from "../../components/mySelect";
 import { getData, sendData } from "../../config/firebaseMethods";
 import AddIcon from "@mui/icons-material/Add";
-import {
-   
-  Typography,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox from "@mui/material/Checkbox";
 
 const QuizForm = () => {
   const [model, setModel] = useState({});
   const [courseList, setCourseList] = useState([]);
   const [course, setCourse] = useState("");
   const [dbObj, setDbObj] = useState([]);
-  const [question, setQuestion] = useState("");
-  const [questionArr, setQuestionArr] = useState({});
-  const [option, setOption] = useState("");
-  const [optionArr, setOptionArr] = useState([""]);
-const [correctAns,setCorrectAns]=useState("")
+  const [question, setQuestion] = useState({});
+  const [questionArr, setQuestionArr] = useState([]);
+  const [option, setOption] = useState({});
+  const [optionArr, setOptionArr] = useState([]);
+  const [correctAns, setCorrectAns] = useState("");
   const getFromDB = () => {
     getData(`toDBcourseInfo/`)
       .then((res) => {
-        console.log(res);
-        console.log(course);
+        // console.log(res);
+        // console.log(course);
 
-        console.log(courseList);
+        // console.log(courseList);
 
         // let [{courseName}]=res ;
         // console.log(courseName)
@@ -65,11 +62,13 @@ const [correctAns,setCorrectAns]=useState("")
     console.log(model);
     setModel({ ...model });
   };
-  const addOption = ()=>{
+  const addOption = () => {
     setOptionArr([...optionArr, option]);
-    fillModel("optionArr", optionArr);
-  }
-  const submitQuiz=()=>{
+
+    // fillModel("optionArr", optionArr);
+  };
+  const submitQuiz = () => {
+    model.questionArray = questionArr;
     sendData(model, `toDBquizForm/`)
       .then((res) => {
         console.log(res);
@@ -82,23 +81,31 @@ const [correctAns,setCorrectAns]=useState("")
       .catch((err) => {
         console.log(err);
       });
-  }
-  const addQuestion=()=>{
-questionArr.question=question;
-questionArr.options=optionArr;
-console.log(questionArr)
-// setOptionArr([...optionArr, option]);
+  };
+  const addQuestion = () => {
+    let tempQuest =
+      // questionArr.question = question;
+      // (question.optionArr = optionArr.map((x) => x.value));
+      (question.optionArr = optionArr.map((x) => x));
+    question.correctAns = optionArr.find((x) => x.isChecked == true).value;
+    setQuestionArr([...questionArr, question]);
+    console.log(question);
+    console.log(questionArr);
+    // setOption("")
+    // setOptionArr([])
+    // setQuestion({})
+    // setOptionArr([...optionArr, option]);
     // fillModel("optionArr", optionArr);
-  }
+  };
   const drawerWidth = 200;
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+  const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
   return (
     <>
-      {console.log(course)}
-      {console.log(courseList)}
+      {/* {console.log(course)} */}
+      {/* {console.log(courseList)} */}
       <Box
-      className="bgLight"
+        className="bgLight"
         sx={{
           // backgroundColor: "#E7D045",
           display: "flex",
@@ -117,6 +124,7 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
           {/* code here */}
 
           <Grid container sx={{}}>
+            </Grid>
             <Grid
               item
               sx={{
@@ -152,15 +160,39 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
                   fillModel("quizTitle", e.target.value);
                 }}
               />
+
+              {/* {courseList.map((e,i)=>(<p>{e.label}</p>))} */}
+              <MyInput
+                focused
+                required
+                type="number"
+                color={"secondary"}
+                label={"Enter Quiz Marks"}
+                variant={"filled"}
+                onChange={(e) => {
+                  fillModel("quizMarks", e.target.value);
+                }}
+              />
+              <MyInput
+                label={"Enter Duration in minutes"}
+                variant={"filled"}
+                focused
+                required
+                type="number"
+                color={"secondary"}
+                onChange={(e) => {
+                  fillModel("quizDuration", e.target.value);
+                }}
+              />
               <MySelect
-                arr={courseList}
+                arr={courseList ?? [{ value: "null", label: "null" }]}
                 label={"Courses"}
                 onChange={(e) => {
                   fillModel("quizCourse", e.target.value);
                 }}
               />
-              {/* {courseList.map((e,i)=>(<p>{e.label}</p>))} */}
             </Grid>
+
             <Grid
               item
               md={12}
@@ -173,25 +205,27 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
                 // border:2,
               }}
             >
-              <Box
-              sx={{display:"flex"}}
-              >
-
-              <MyInput
-                focused
-                required
-                fullWidth
-                // size={"large"}
-                color={"secondary"}
-                label={"Enter Question"}
-                variant={"outlined"}
-                onChange={(e) => {
-setQuestion(e.target.value)
-                }}
+              <Box sx={{ display: "flex" }}>
+                <MyInput
+                  focused
+                  required
+                  fullWidth
+                  // size={"large"}
+                  color={"secondary"}
+                  label={"Enter Question"}
+                  variant={"outlined"}
+                  onChange={(e) => {
+                    setQuestion({ question: e.target.value });
+                  }}
                 />
-                <Button variant="contained" color="secondary" onClick={addQuestion}>Submit Question</Button>
-
-                </Box>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={addQuestion}
+                >
+                  Submit Question
+                </Button>
+              </Box>
               <Box
                 sx={{
                   width: "40%",
@@ -209,7 +243,7 @@ setQuestion(e.target.value)
                   label={"Enter Options"}
                   variant={"outlined"}
                   onChange={(e) => {
-                    setOption(e.target.value)
+                    setOption({ value: e.target.value, isChecked: false });
                     // fillModel("quizTitle", e.target.value);
                   }}
                 />
@@ -229,14 +263,49 @@ setQuestion(e.target.value)
                 justifyContent: "center",
                 // border:2,
               }}
+            >
+              <Box
+                sx={{
+                  border: 1,
+                  // display:"flex",
+                  alignItems: "baseline",
+                }}
               >
-<Box sx={{border:1,
-  // display:"flex",
-  alignItems:"baseline"}}>
-{/* <Checkbox {...label} /> */}
-              {optionArr.map((e,i)=>(<Typography>{e}</Typography>))}
-</Box>
-
+                {/* <Checkbox {...label} /> */}
+                {optionArr && optionArr.length > 0
+                  ? optionArr.map((x, i) => (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          // justifyContent:"flexStart", alignItem:"flexEnd"
+                        }}
+                      >
+                        <Box
+                          sx={
+                            {
+                              // border:1
+                            }
+                          }
+                        >
+                          <Checkbox
+                            onClick={(e) => (x.isChecked = true)}
+                            {...label}
+                          />
+                        </Box>
+                        <Box
+                          sx={{
+                            // border:1,
+                            paddingTop: 1,
+                            // display:"flex",alignItem:"flexEnd",
+                            // justifyContent:"center"
+                          }}
+                        >
+                          <Typography>{x.value}</Typography>
+                        </Box>
+                      </Box>
+                    ))
+                  : null}
+              </Box>
             </Grid>
             <Grid
               item
@@ -249,15 +318,47 @@ setQuestion(e.target.value)
                 justifyContent: "center",
                 // border:2,
               }}
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={submitQuiz}
               >
-
-                <Button variant="contained" color="secondary" onClick={submitQuiz}>Submit Quiz</Button>
-              </Grid>
+                Submit Quiz
+              </Button>
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                // border:2,
+              }}
+            >
+               <Grid
+              item
+              md={12}
+              xs={12}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                // border:2,
+              }}
+            >
+            </Grid>
           </Grid>
         </Box>
       </Box>
     </>
-  );
+  )
+  
 };
 
 export default QuizForm;
+{/* {questionArr.map((e,i)=>())} */}

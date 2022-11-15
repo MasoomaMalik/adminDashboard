@@ -102,7 +102,7 @@ let getData = (nodeName, dataId) => {
 
                   resolve(data);
                 } else {
-                    console.log(data);
+                    // console.log(data);
                     
                     resolve(Object.values(data));
                   }
