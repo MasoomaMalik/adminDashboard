@@ -10,16 +10,16 @@ const MySelect = ({ arr, onChange, label }) => {
     // width: 300,
     "&.MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "#A04EF6",
+        borderColor: "#292826",
         color:"#fff"
       },
       "&:hover fieldset": {
-        borderColor: "#A04EF6",
+        borderColor: "#292826",
         color:"#fff"
 
       },
       "&.Mui-focused fieldset": {
-        borderColor: "#A04EF6",
+        borderColor: "#292826",
         color:"#fff"
 
       }
@@ -27,21 +27,26 @@ const MySelect = ({ arr, onChange, label }) => {
   }));
   return (
     <>
-    <Box sx={{margin:"0.5rem",padding:"0.25rem"}}> 
+    <Box 
+    sx={{margin:"0.5rem",padding:"0.25rem",justifyContent:"center", display:"flex"}}
+    > 
 
         
-      <FormControl fullWidth  size="small" sx={{width:225}}>
+      <FormControl   size="small" 
+      sx={{ m: 1, minWidth: {xs:245} }}
+      // sx={{width:{md:225, sm:220, xs:150}}}
+      >
         <InputLabel>{label}</InputLabel>
-        <Select onChange={onChange}
+        <CustomSelect onChange={onChange}
         
-      
+        defaultValue = ""
       
 
         >
           {arr.map((e, i) => (
               <MenuItem key={i} value={e.value}>{e.label}</MenuItem>
               ))}
-        </Select>
+        </CustomSelect>
       </FormControl>
               </Box>
     </>

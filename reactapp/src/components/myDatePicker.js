@@ -16,7 +16,8 @@ export default function BasicDatePicker({onChange,value}) {
         renderInput={(params) => <TextField
           
          sx={{
-            '.MuiInputBase-input': {padding: '0.25rem', width:150, margin:"0.5rem" , color:"white"},
+            '.MuiInputBase-input': {padding: '0.25rem', width:{lg:200, md:80}, margin:"0.5rem" ,
+             color:"black"},
          }}
           {...params} />}
        

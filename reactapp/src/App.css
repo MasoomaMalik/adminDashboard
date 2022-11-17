@@ -46,11 +46,13 @@
 }
 .lobster{
   font-family: 'Lobster', cursive;
+  color:"#292826";
+
 /* color:'white' */
 }
 .comfortaa{
   font-family: 'Comfortaa', cursive;
-  color:'black';
+  color:"#292826";
   
   font-size:"2rem";
   font-weight: 700;

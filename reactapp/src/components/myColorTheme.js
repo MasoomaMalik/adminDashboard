@@ -6,13 +6,17 @@ import React from 'react'
           primary: {
             //purple
             // main: "#E7D045"
-            main: "#A04EF6"
+            // main: "#A04EF6"
+//PINK
+            main: "#DF4C73"
 
           },
           //yelow
           secondary: {
             // main: "#A04EF6"
-            main: "#E7D045"
+            // main: "#E7D045"
+            //charcoal
+            main:"#292826"
 // 
           }
         }
@@ -20,3 +24,12 @@ import React from 'react'
      
 
 export default MyColorTheme
+
+//yellow
+//#E7D045
+//charcoal
+// main:"#292826"
+//PINK
+// main: "#DF4C73"
+//bilkul light blue
+//#E2F0F9

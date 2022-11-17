@@ -15,7 +15,8 @@ import Cities from '../screen/adminDashboardScreens/cities'
 import Countries from '../screen/adminDashboardScreens/countries'
 import QuizList_Preview from '../screen/adminDashboardScreens/quizResult'
 import QuizResult from '../screen/adminDashboardScreens/quizResult'
-import Quiz from '../screen/quiz'
+import Quiz from '../screen/studentDashboardScreens/myQuizzes'
+import StudentDashboard from '../screen/studentDashboard'
 
 function AppRouter() {
 
@@ -27,6 +28,7 @@ function AppRouter() {
                 <Route path="/" element={<Signup/> }/>
                 <Route path="login" element={<Login/> }/>
                 <Route path="adminDashboard/:id" element={<Dashboard/> }/>
+                <Route path="studentDashboard/:id/*" element={<StudentDashboard/> }/>
                 {/* <Route path="adminDashboard/:id/usersRecord" element={<UsersRecord/> }/> */}
                 <Route path="adminDashboard/usersRecord" element={<UsersRecord/> }/>
                 <Route path="adminDashboard/courseForm" element={<CourseForm/> }/>
@@ -35,9 +37,9 @@ function AppRouter() {
                 <Route path="adminDashboard/cities" element={<Cities/> }/>
                 <Route path="adminDashboard/countries" element={<Countries/> }/>
                 <Route path="adminDashboard/quizResult" element={<QuizResult/> }/>
-                <Route path="userRegistrationForm" element={<Home/> }/>
+                {/* <Route path="userRegistrationForm" element={<Home/> }/> */}
                 <Route path="quiz" element={<Quiz/> }/>
-                <Route path="formSubmitMessage" element={<FormSubmitMessage/> }/>
+                {/* <Route path="formSubmitMessage" element={<FormSubmitMessage/> }/> */}
                 <Route path="quiz/" element={<Quiz/>}></Route>
             </Routes>
         </Router>

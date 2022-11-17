@@ -1,101 +1,175 @@
 import React, { useState } from "react";
-import { Button, CircularProgress, Grid, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
+import { ThemeProvider } from "@mui/material";
 import Heading from "../components/Heading";
-import { loginUser } from "../config/firebaseMethods";
+import { getCategory, loginUser } from "../config/firebaseMethods";
 import { Link, useNavigate } from "react-router-dom";
+// import Heading2 from "../components/Heading2";
+import MyInput from "../components/myInput";
+import MyColorTheme from "../components/myColorTheme";
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [model, setModel] = useState([]);
   const [isLoading, setLoader] = useState(false);
-  const navigate= useNavigate();
-  const login =()=>{
-    setLoader(true)
-    loginUser({email, password})
-    .then((success)=>{console.log(success)
-      setLoader(false);
-    navigate(`/adminDashboard/${success.id}`)
-    }
-      )
-    .catch((err)=>{console.log(err)
-      setLoader(false);})
+  const navigate = useNavigate();
+  const login = (e) => {
+    e.preventDefault();
+    setLoader(true);
+    loginUser(model)
+      .then((success) => {
+        console.log(success.category);
+        setLoader(false);
+        switch (success.category) {
+          case "Teacher": {
+            console.log("Teacher");
+            navigate(`/teacherDashboard/${success.id}`);
 
-  }
+            // navigate(`/adminDashboard/${success.id}`);
+            break;
+          }
+
+          case "Student": {
+            console.log("Student");
+
+            navigate(`/studentDashboard/${success.id}`);
+            break;
+          }
+          case "Admin": {
+            console.log("Admin");
+
+            // navigate(`/adminDashboard/${success.id}`);
+            break;
+          }
+          default: {
+            console.log("none");
+
+            // navigate(`/adminDashboard/${success.id}`);
+            break;
+          }
+        }
+        //  getCategory()
+        //  .then((res)=>{console.log(res)})
+        //  .catch((err)=>{console.log(err)})
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoader(false);
+      });
+  };
+  const fillModel = (key, value) => {
+    model[key] = value;
+    console.log(model);
+    setModel({ ...model });
+  };
   return (
     <>
-      <Grid
-        container
-        sx={{
-          backgroundColor: "#A04EF6",
-
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        {/* item grid */}
-        <Grid
-          item
-          sx={{
-            borderRadius: 5,
-            backgroundColor: "#E7D045",
-            maxWidth: "60%",
-            marginY: 1,
-            marginX: { md: 5, sx: 1 },
-            paddingY: 1,
-            paddingX: { md: 5, sx: 1 },
-            display: "flex",
-            flexDirection: "column",
-            alignContent: "center",
-          }}
-        >
-          {/* sign up heading */}
-
-          <Heading title="Login Here" />
-
-          {/* sign up input of email .... */}
-
-          <Box
+      <ThemeProvider theme={MyColorTheme}>
+        <form onSubmit={login}>
+          <Grid
+            container
             sx={{
-              fontSize: "0.5rem",
+              backgroundColor: "#E2F0F9",
+              width: "100vw",
+              height: "100%",
+              minHeight: "100vh",
               display: "flex",
-              flexDirection: "column",
-              margin: 1,
-              marginY: 3,
+              paddingX: 5,
+              paddingY: 2,
+              justifyContent: "center",
             }}
           >
-            <Box sx={{ margin: "0.5rem" }}>
-              <TextField
+            <Grid
+              item
+              md={12}
+              xs={12}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Heading title="Login" variant="h4" color="#DF4C73" fontFamily="comfortaa"/>
+
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <MyInput
                 focused
-                color="secondary"
-                label="Enter Email Address"
-                variant="outlined"
+                size={"large"}
+                color={"secondary"}
+                label={"Enter Email Address"}
+                variant={"filled"}
                 onChange={(e) => {
-                  setEmail(e.target.value);
+                  fillModel("email", e.target.value);
                 }}
               />
-            </Box>
-            <Box sx={{ margin: "0.5rem" }}>
-              <TextField
+            </Grid>
+
+            <Grid
+              item
+              md={12}
+              xs={12}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <MyInput
                 focused
-                color="secondary"
-                label="Enter Password"
+                size={"large"}
+                color={"secondary"}
+                label={"Enter Password"}
                 type="password"
-                variant="outlined"
+                variant={"filled"}
                 onChange={(e) => {
-                  setPassword(e.target.value);
+                  fillModel("password", e.target.value);
                 }}
               />
-            </Box>
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <Button sx={{ marginY: 1 }} color="secondary" variant="contained" onClick={login}>
-              {isLoading ? <CircularProgress /> : <p>Login</p>}
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Button
+                sx={{
+                  marginY: 1,
+                  width: 225,
+                  height: 50,
+                  // paddingY:"0.1rem",
+                }}
+                // color="#DF4C73"
+                size="small"
+                variant="contained"
+                type="submit"
+              >
+                {isLoading ? <CircularProgress /> : <p>Login</p>}
               </Button>
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+              sx={{
+                margin: 1,
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Typography>
+                Failed to login? <Link to="/">Signup Here</Link>
+              </Typography>
+            </Grid>
+          </Grid>
+        </form>
+      </ThemeProvider>
     </>
   );
 };

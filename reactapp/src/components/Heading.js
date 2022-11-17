@@ -1,25 +1,33 @@
-import { Box } from '@mui/system'
-import React from 'react'
+import { Box } from "@mui/system";
+import React from "react";
+import MyColorTheme from "./myColorTheme";
+import { ThemeProvider } from "@mui/material";
+import Typography from "@mui/material/Typography";
 
-const Heading = ({justifyContent,title,color}) => {
+const Heading = ({ justifyContent, title, color,fontFamily, fontSize, variant}) => {
   return (
-   <>
-   <Box sx={{
-     color:color,
-// color:'secondary',
-    display:'flex',
-    // dataId ? dataId : ""
-    justifyContent:'center',
-    fontSize:{md:'1.5rem',sx:'0.75rem'},
-    margin:1,
-   }}>
+    <>
+      <ThemeProvider theme={MyColorTheme}>
+        <Box
+          sx={{
+            margin: 1,
+          }}
+        >
+          <Typography
+            style={{
+              // fontSize: "1rem",
+              color: color,
+              fontFamily: fontFamily,
+              fontWeight: 700,
+            }}
+            variant={variant}
+          >
+            {title}
+          </Typography>
+        </Box>
+      </ThemeProvider>
+    </>
+  );
+};
 
-   <h3 
-   className='lobster'
-    >{title}</h3>
-   </Box>
-   </>
-  )
-}
-
-export default Heading
+export default Heading;

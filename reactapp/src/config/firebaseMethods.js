@@ -11,7 +11,9 @@ export const auth = getAuth(app);
 export const db = getDatabase(app);
 
 let signUpUser = (obj) => {
-  let { email, password, userName, contact, gender } = obj;
+  let { email, password, 
+    firstName,lastName,
+     contact, category } = obj;
   return new Promise((resolve, reject) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -65,6 +67,38 @@ let checkUser = () => {
     });
   });
 };
+
+let logout = () => {
+  return new Promise((resolve, reject) => {
+   
+    onAuthStateChanged(auth, (user) => {
+      if(user){
+
+        auth.signOut()
+        resolve( "user logout")
+        
+      }
+      else{
+
+        reject("user ni h")
+      }
+       
+    });
+})}
+;
+
+// let getCategory = ()=>{
+//   return new Promise((resolve, reject) => {
+//     onAuthStateChanged(auth, (user) => {
+//       if (user) {
+//         const category = user.category;
+//         resolve(category);
+//       } else {
+//         reject("no category");
+//       }
+//     });
+//   });
+// }
 let sendData = (obj, nodeName, dataId) => {
   return new Promise((resolve, reject) => {
     //edit
@@ -140,6 +174,58 @@ let getData = (nodeName, dataId) => {
 
   });
 };
+let getDataByUser = (nodeName, dataId) => {
+  
+  return new Promise((resolve, reject) => {
+    let reference = ref(db, `${nodeName}/${dataId ? dataId : ""}`);
+    onValue(
+      reference,
+      (snapshot) => {
+          if (snapshot.exists()) {
+              let data = snapshot.val();
+              if (dataId) {
+                  // console.log(data);
+
+                  resolve(data);
+                } else {
+                    // console.log(data);
+                    
+                    resolve(data);
+                  }
+                } else {
+                    reject("no data found");
+                  }
+                },
+                { onlyOnce: false }
+              );
+              
+    // const commentsRef = ref(db, 'post-comments/' + postId);
+   
+   //onChildAdded
+//     onChildAdded(reference, (snapshot) => {
+//       if (snapshot.exists()) {
+//               let data = snapshot.val();
+//               if (dataId) {
+//                   console.log(data);
+
+//                   resolve(data);
+//                 } else {
+//                     console.log(data);
+//                     resolve(data)
+                  
+//                   }
+//                 } else {
+//                     reject("no data found");
+//                   }
+//                 },
+//                 { onlyOnce: false }
+            
+// );
+    
+
+
+  });
+};
 
 let getDataOnChild = (nodeName, dataId) => {
   
@@ -173,4 +259,6 @@ let getDataOnChild = (nodeName, dataId) => {
 
   });
 };
-export { signUpUser, loginUser, checkUser, sendData, getData,getDataOnChild };
+export { signUpUser, loginUser, checkUser,logout,
+  // getCategory, 
+  sendData, getData,getDataOnChild,getDataByUser };
