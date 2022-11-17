@@ -9,6 +9,7 @@ import MyColorTheme from './components/myColorTheme';
 function App() {
   return (
     <>
+    <h1></h1>
       <ThemeProvider theme={MyColorTheme}>
 
     <AppRouter/>
