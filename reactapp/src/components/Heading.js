@@ -27,7 +27,7 @@ const Heading = ({ justifyContent, title, color,fontFamily, fontSize, variant}) 
         </Box>
       </ThemeProvider>
     </>
-  );
-};
+  )
+}
 
-export default Heading;
+export default Heading

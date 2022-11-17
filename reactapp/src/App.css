@@ -65,5 +65,30 @@
 
 }
 th, td {
-  border: 1px solid black;
+  /* border: 1px solid #292826; */
+
+}
+th{
+  background-color: #292826;
+  color:#ffffff;
+  padding:1rem 2rem;
+
+}
+td{
+  /* y x */
+  padding:1rem 2rem;
+  
+  text-align: center;
+}
+table{
+  /* border-collapse: separate; */
+  border-spacing: 0.1rem 0.25rem;
+  /* border:1px solid green; */
+}
+.table-body .table-body-tr{
+  background-color: #E2F0F9;
+
+}
+.table-body .table-body-tr:hover{
+  background-color: #E7D045;
 }

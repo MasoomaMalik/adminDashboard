@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { getDatabase, ref, set, push, onValue, get, onChildAdded } from "firebase/database";
 
@@ -67,6 +68,24 @@ let checkUser = () => {
     });
   });
 };
+let resetPassword = (email) => {
+  return new Promise((resolve, reject) => {
+   
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        resolve("password reset link sent")
+      })
+      .catch((error) => {
+        
+
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        reject(errorMessage)
+        // ..
+      });
+ 
+  });
+};
 
 let logout = () => {
   return new Promise((resolve, reject) => {
@@ -111,7 +130,7 @@ let sendData = (obj, nodeName, dataId) => {
       postRef = ref(db, `${nodeName}/${obj.dataId}`);
     }
     let reference=ref(db,`${nodeName}/${obj.dataId}`)
-    set(reference, obj)
+    set(postRef, obj)
       .then((res) => {
         resolve(`data added on ${nodeName}`);
       })
@@ -174,56 +193,26 @@ let getData = (nodeName, dataId) => {
 
   });
 };
-let getDataByUser = (nodeName, dataId) => {
-  
+let deleteData = ( nodeName, dataId) => {
   return new Promise((resolve, reject) => {
-    let reference = ref(db, `${nodeName}/${dataId ? dataId : ""}`);
-    onValue(
-      reference,
-      (snapshot) => {
-          if (snapshot.exists()) {
-              let data = snapshot.val();
-              if (dataId) {
-                  // console.log(data);
+    //edit
+    let postRef;
+    if (dataId) {
+      postRef = ref(db, `${nodeName}/${dataId}`);
+      console.log("only node")
+    } else {
+      postRef = ref(db, `${nodeName}`);
+      console.log("  node and data")
 
-                  resolve(data);
-                } else {
-                    // console.log(data);
-                    
-                    resolve(data);
-                  }
-                } else {
-                    reject("no data found");
-                  }
-                },
-                { onlyOnce: false }
-              );
-              
-    // const commentsRef = ref(db, 'post-comments/' + postId);
-   
-   //onChildAdded
-//     onChildAdded(reference, (snapshot) => {
-//       if (snapshot.exists()) {
-//               let data = snapshot.val();
-//               if (dataId) {
-//                   console.log(data);
-
-//                   resolve(data);
-//                 } else {
-//                     console.log(data);
-//                     resolve(data)
-                  
-//                   }
-//                 } else {
-//                     reject("no data found");
-//                   }
-//                 },
-//                 { onlyOnce: false }
-            
-// );
-    
-
-
+    }
+    console.log(postRef)
+    set(postRef, null)
+      .then((res) => {
+        resolve(`data deleted from ${nodeName}`);
+      })
+      .catch((err) => {
+        reject(err);
+      });
   });
 };
 
@@ -259,6 +248,6 @@ let getDataOnChild = (nodeName, dataId) => {
 
   });
 };
-export { signUpUser, loginUser, checkUser,logout,
+export { signUpUser, loginUser, checkUser,logout,resetPassword,
   // getCategory, 
-  sendData, getData,getDataOnChild,getDataByUser };
+  sendData, getData,getDataOnChild,deleteData };

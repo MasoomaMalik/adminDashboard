@@ -14,7 +14,7 @@ const MyInput = ({
   id,
   size,
   fullWidth,
-}) => {
+  }) => {
   return (
     <>
       <ThemeProvider theme={MyColorTheme}>
@@ -37,6 +37,7 @@ const MyInput = ({
             required={required}
             type={type}
             fullWidth={fullWidth}
+            // key={key}
           />
         </Box>
       </ThemeProvider>

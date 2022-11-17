@@ -10,76 +10,47 @@ import { Box } from "@mui/system";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { ThemeProvider } from "@mui/material";
 import Heading from "../components/Heading";
-import { getCategory, loginUser } from "../config/firebaseMethods";
+import {
+  getCategory,
+  loginUser,
+  resetPassword,
+} from "../config/firebaseMethods";
 import { Link, useNavigate } from "react-router-dom";
 import MyInput from "../components/myInput";
 import MyColorTheme from "../components/myColorTheme";
 import MyButton from "../components/myButton";
 
-const Login = () => {
+const PasswordReset = () => {
   const [model, setModel] = useState([]);
   const [isLoading, setLoader] = useState(false);
+  const [email, setEmail] = useState("");
+  const [msg, setMsg] = useState(false);
   const navigate = useNavigate();
 
   //login func
-  const login = (e) => {
-    e.preventDefault();
-    setLoader(true);
-    loginUser(model)
-      .then((success) => {
-        console.log(success.category);
-        setLoader(false);
-        switch (success.category) {
-          case "admin": {
-            console.log("admin");
-            navigate(`/adminDashboard/${success.id}`);
-            break;
-          }
-
-          case "user": {
-            console.log("user");
-            navigate(`/userScreen/${success.id}`);
-            break;
-          }
-          default: {
-            console.log("none");
-            break;
-          }
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoader(false);
-      });
-  };
 
   //password reset
-const resetUserPassword=()=>{
+  const resetUserPassword = (e) => {
+    console.log(email);
+    setLoader(true);
+    e.preventDefault();
 
-const auth = getAuth();
-sendPasswordResetEmail(auth, "masoomamalik389@gmail.com")
-  .then(() => {
-    // Password reset email sent!
-    // ..
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ..
-  });
+    resetPassword(email)
+      .then((res) => {
+        setLoader(false);
+        setMsg(true);
+        console.log(res);
+      })
+      .catch((err) => {
+        setLoader(false);
 
-}
-
-
-  const fillModel = (key, value) => {
-    model[key] = value;
-    console.log(model);
-    setModel({ ...model });
+        console.log(err);
+      });
   };
 
   return (
     <>
-      <form onSubmit={login}>
+      <form onSubmit={resetUserPassword}>
         <Grid
           container
           sx={{
@@ -103,7 +74,7 @@ sendPasswordResetEmail(auth, "masoomamalik389@gmail.com")
             }}
           >
             <Heading
-              title="Login"
+              title="Password-Reset"
               variant="h4"
               color="#292826"
               fontFamily="comfortaa"
@@ -122,29 +93,11 @@ sendPasswordResetEmail(auth, "masoomamalik389@gmail.com")
               label={"Enter Email Address"}
               variant={"filled"}
               onChange={(e) => {
-                fillModel("email", e.target.value);
+                setEmail(e.target.value);
               }}
             />
           </Grid>
 
-          <Grid
-            item
-            md={12}
-            xs={12}
-            sx={{ display: "flex", justifyContent: "center" }}
-          >
-            <MyInput
-              focused
-              size={"large"}
-              color={"secondary"}
-              label={"Enter Password"}
-              type="password"
-              variant={"filled"}
-              onChange={(e) => {
-                fillModel("password", e.target.value);
-              }}
-            />
-          </Grid>
           <Grid
             item
             md={12}
@@ -158,7 +111,7 @@ sendPasswordResetEmail(auth, "masoomamalik389@gmail.com")
               type="submit"
               disabled={isLoading}
               isLoading={isLoading}
-              label="Login"
+              label="Submit"
             />
             ;
           </Grid>
@@ -169,10 +122,31 @@ sendPasswordResetEmail(auth, "masoomamalik389@gmail.com")
             sx={{
               margin: 1,
               display: "flex",
+              // flexDirection:"column",
+              alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <Typography>Forgot Password? <Link to="/passwordreset"> Click Here</Link></Typography>
+            {/* {console.log()} */}
+            {msg ? (
+              <>
+                <Box sx={{ margin: 1 }}>
+                  <Typography>
+                    {`We've sent a password-reset link to ${email}. `}
+                  </Typography>
+                </Box>
+                <MyButton
+                  width={225}
+                  height={50}
+                  variant={"contained"}
+                  label="Login Here"
+                  onClick={(e) => {
+                    setMsg(false);
+                    navigate("/login");
+                  }}
+                />
+              </>
+            ) : null}
           </Grid>
         </Grid>
       </form>
@@ -180,4 +154,4 @@ sendPasswordResetEmail(auth, "masoomamalik389@gmail.com")
   );
 };
 
-export default Login;
+export default PasswordReset;
