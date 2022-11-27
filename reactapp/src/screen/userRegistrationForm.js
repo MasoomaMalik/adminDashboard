@@ -1,55 +1,59 @@
-import { Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
+import { Button, Grid, ThemeProvider } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import {
-  db,
-  auth,
-  checkUser,
-  sendData,
-  getData,
-} from "../config/firebaseMethods";
-import { getDatabase, ref, set, push, onValue, get } from "firebase/database";
+import { db, sendData, getData } from "../config/firebaseMethods";
+import { ref, set } from "firebase/database";
 import { uid } from "uid";
-import { useNavigate, useLocation, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import MyInput from "../components/myInput";
 import MySelect from "../components/mySelect";
-import MyResponsiveDrawer from "../components/drawer";
-const Home = ({ children }) => {
-  const params = useParams();
+import BasicDatePicker from "../components/myDatePicker";
+import Heading from "../components/Heading";
+import MyColorTheme from "../components/myColorTheme";
+
+const Home = () => {
   const [userId, setUserId] = useState("");
   const [toDB, setToDB] = useState("");
   const [fromDB, setFromDB] = useState([]);
   const [isLoading, setLoader] = useState(false);
-  const [model,setModel]=useState({})
-  const courseArr=[
-    {label:"Front End Dev", value : "frontEndDev"},
-    {label:"Back End Dev", value : "backEndDev"},
-  ]
-  const sectionArr=[
-    {label:"A", value : "A"},
-    {label:"B", value : "B"},
-  ]
+  const [model, setModel] = useState([]);
+  const [dob, setDob] = useState("");
+  const [isFeeSubmitted, setIsFeeSubmitted] = useState(false);
+  const [isApproved, setIsApproved] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const navigate = useNavigate();
+  const courseArr = [
+    { label: "Front End Dev", value: "frontEndDev" },
+    { label: "Back End Dev", value: "backEndDev" },
+  ];
+  const sectionArr = [
+    { label: "A", value: "A" },
+    { label: "B", value: "B" },
+  ];
 
   const handleSelectChange = (event) => {
     // setAge(event.target.value);
   };
-const  fillModel=(key,value)=>{
-// setModel(value)
+  const fillModel = (key, value) => {
+    model[key] = value;
+    console.log(model);
+    setModel({ ...model });
+  };
 
-model[key]=value;
-// model.abc=e.target.value;
-console.log(model)
-// let temp={abc:e.target.value}
-// console.log(temp)
-setModel({...model})
- 
-}
-  const navigate = useNavigate();
-
-  const sendToDB = () => {
+  const sendToDB = (event) => {
+    event.preventDefault();
     const date = new Date();
-    const time =
-      date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    // const time =
+    //   date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    const registrationDate = date.getDate();
+    const registrationYear = date.getFullYear();
+    model["registrationDate"] = registrationDate;
+    model["registrationYear"] = registrationYear;
+    model["isFeeSubmitted"] = isFeeSubmitted;
+    model["isApproved"] = isApproved;
+    model["isActive"] = isActive;
+
+    console.log("model");
 
     sendData(
       // {
@@ -58,11 +62,11 @@ setModel({...model})
       //   // userId: userId,
       // }
       model,
-      `toDBuserData`
+      `userRegistrationForm`
     )
       .then((res) => {
         console.log(res);
-        navigate("/result")
+        navigate("/formSubmitMessage");
       })
       .catch((err) => {
         console.log(err);
@@ -81,207 +85,272 @@ setModel({...model})
       });
   };
   useEffect(() => {
-    console.log("model")
-    console.log(model)
-    checkUser()
-      .then((res) => {
-        if (params.id === res) {
-          setUserId(res);
-          getFromDB();
-        } else {
-          navigate("/login");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    console.log("model");
+    console.log(model);
+    // checkUser()
+    //   .then((res) => {
+    //     if (params.id === res) {
+    //       setUserId(res);
+    //       getFromDB();
+    //     } else {
+    //       navigate("/login");
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
 
     // extractDateMonthYear();
   }, [model]);
   const extractDateMonthYear = () => {
-    // console.log(dateOfBirth);
-
+    let birthYear = dob.$y;
     const current = new Date();
     let currYear = current.getFullYear();
-
-    // console.log(tempYear);
-  };
-
-  const sendUserData = ({ obj }) => {
-    const uidd = uid();
-
-    set(ref(db, `formData/${uidd}`), { obj })
-      .then((success) => {
-        console.log(success);
-        navigate("result", { state: uidd });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    let age = currYear - birthYear;
+    fillModel("age", age);
   };
   return (
     <>
-      {/* <Box>
-        <TextField
-          label="send Data"
-          variant="standard"
-          onChange={(e) => {
-            setToDB(e.target.value);
-          }}
-        />
-
-        <Button variant="contained" onClick={sendToDB}>
-          send data
-        </Button>
-      </Box>
-      {fromDB.map((e, i) => (
-        <li key={e.dataId}>{e.data}</li>
-      ))} */}
-<Link to = "/courseForm">course form</Link>
-      {/* form */}
-
-      <Grid
-        container
-        sx={{
-          backgroundColor: "#A04EF6",
-
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        {/* item grid */}
-        <Grid
-          item
+      <ThemeProvider theme={MyColorTheme}>
+        <Box
           sx={{
-            borderRadius: 5,
+            padding: "1rem",
+            width: "100vw",
+            height: "100vh",
+            // backgroundColor: "#A04EF6",
             backgroundColor: "#E7D045",
-            maxWidth: "90%",
-            marginY: 1,
-            // marginX: { md: 5, sx: 1 },
-            paddingY: 1,
-            // paddingX: { md: 5, sx: 1 },
+
             display: "flex",
-            flexDirection: "column",
-            // alignContent: "center",
+            justifyContent: "center",
+          
           }}
         >
-          {/* <Box
-            sx={{
-              fontSize: "0.5rem",
-              display: "flex",
-              flexDirection: "column",
-              margin: 1,
-              marginY: 3,
-            }}
-          > */}
-            {/* <Box sx={{ margin: "0.5rem" }}> */}
-              <MyInput
-                focused
-                color={"secondary"}
-                label={"Enter First Name"}
-                variant={"outlined"}
+          <form onSubmit={sendToDB}>
+            <Grid
+              container
+              sx={{
+               
+                width: { md: "60vw", xs: "80vw" },
+                height: "auto",
+              }}
+            >
+              <Grid item md={12} xs={12}>
+                <Heading title={"User Registration Form"} color={"primary"} />
+              </Grid>
 
-                name="firstName"
-                onChange={(e)=>{fillModel('firstName',e.target.value)}}
-              />
-              <MyInput
-                focused
-                color={"secondary"}
-                label={"Enter Last Name"}
-                variant={"outlined"}
-                name='lastName'
-                onChange={(e)=>{fillModel('lastName',e.target.value)}}
+              <Grid
+                item
+                md={6}
+                xs={12}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <MyInput
+                  focused
+                  color={"primary"}
+                  label={"Enter First Name"}
+                  variant={"outlined"}
+                  name="firstName"
+                  onChange={(e) => {
+                    fillModel("firstName", e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <MyInput
+                  focused
+                  color={"primary"}
+                  label={"Enter Last Name"}
+                  variant={"outlined"}
+                  name="lastName"
+                  onChange={(e) => {
+                    fillModel("lastName", e.target.value);
+                  }}
+                />
+              </Grid>
 
-              />
-              <MyInput
-                focused
-                color={"secondary"}
-                label={"Enter Father's Name"}
-                variant={"outlined"}
-                onChange={(e)=>{fillModel('fatherName',e.target.value)}}
-                
-              />
-              <MyInput
-                focused
-                required
-                // required
-                type="number"
-                color={"secondary"}
-                label={"Enter Contact"}
-                variant={"outlined"}
-                onChange={(e)=>{fillModel('contact',e.target.value)}}
+              <Grid
+                item
+                md={6}
+                xs={12}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <MyInput
+                  focused
+                  // required
+                  // required
+                  type="number"
+                  color={"primary"}
+                  label={"Enter Contact"}
+                  variant={"outlined"}
+                  onChange={(e) => {
+                    fillModel("contact", e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <MyInput
+                  focused
+                  // required
+                  type="number"
+                  color={"primary"}
+                  label={"Enter CNIC"}
+                  variant={"outlined"}
+                  onChange={(e) => {
+                    fillModel("cnic", e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <MyInput
+                  focused
+                  color={"primary"}
+                  label={"Enter Father's Name"}
+                  variant={"outlined"}
+                  onChange={(e) => {
+                    fillModel("fatherName", e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <MyInput
+                  focused
+                  type="number"
+                  // required
+                  color={"primary"}
+                  label={"Enter Father's Contact"}
+                  variant={"outlined"}
+                  onChange={(e) => {
+                    fillModel("fatherContact", e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <MyInput
+                  focused
+                  // required
+                  type="number"
+                  color={"primary"}
+                  label={"Enter Father CNIC"}
+                  variant={"outlined"}
+                  onChange={(e) => {
+                    fillModel("fatherCnic", e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <MyInput
+                  focused
+                  // required
+                  type="number"
+                  color={"primary"}
+                  label={"Enter Emergency Contact"}
+                  variant={"outlined"}
+                  onChange={(e) => {
+                    fillModel("emergencyContact", e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <MySelect
+                  arr={sectionArr}
+                  label={"Section"}
+                  onChange={(e) => {
+                    fillModel("section", e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
+                <MySelect
+                  arr={courseArr}
+                  label={"Course"}
+                  onChange={(e) => {
+                    fillModel("course", e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid
+                item
+                md={6}
+                xs={12}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  color: "primary",
+                }}
+              >
+                {/* <Box sx={{ margin: "0.5rem", padding: "0.5rem" }}> */}
 
-              />
-              <MyInput
-                focused
-                type="number"
-                required
-                color={"secondary"}
-                label={"Enter Father's Contact"}
-                variant={"outlined"}
-                onChange={(e)=>{fillModel('fatherContact',e.target.value)}}
-
-              />
-              <MyInput
-                focused
-                required 
-                type="number"
-
-                color={"secondary"}
-                label={"Enter CNIC"}
-                variant={"outlined"}
-                onChange={(e)=>{fillModel('cnic',e.target.value)}}
-
-              />
-              <MyInput
-              focused
-              required 
-              type="number"
-              color={"secondary"}
-              label={"Enter Father CNIC"}
-              variant={"outlined"}
-              onChange={(e)=>{fillModel('fatherCnic',e.target.value)}}
-
-            />
-            <MyInput
-                focused
-                required 
-                type="number"
-                color={"secondary"}
-                label={"Enter Emergency Contact"}
-                variant={"outlined"}
-                onChange={(e)=>{fillModel('emergencyContact',e.target.value)}}
-
-              />
-<Box sx={{margin:'0.5rem',padding:'0.5rem'  }}>
-
-<input type="date" placeholder="Select Data"></input>
-</Box>
-<MySelect
-arr={sectionArr}
-label={"Section"}
-onChange={(e)=>{fillModel('section',e.target.value)}}
-
-/>
-
-<MySelect
-arr={courseArr}
-label={"Course"}
-onChange={(e)=>{fillModel('course',e.target.value)}}
-
-/>
-
-<Button onClick={sendToDB}>
-submit form
-</Button>
-            {/* </Box> */}
-          {/* </Box> */}
-        </Grid>
-      </Grid>
-
-      
+                <BasicDatePicker
+                  // color={"primary"}
+                  // sx={{color:"primary"}}
+                  value={dob}
+                  onChange={(e) => {
+                    setDob(e);
+                    console.log(e);
+                    extractDateMonthYear();
+                  }}
+                />
+                {/* </Box> */}
+              </Grid>
+              <Grid
+                item
+                md={12}
+                xs={12}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "1rem",
+                  padding: "0.25rem",
+                }}
+              >
+                <Button variant="contained" type="submit">
+                  Submit Form
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
+      </ThemeProvider>
     </>
   );
 };

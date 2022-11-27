@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,11 +35,27 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */
 
+:root{
+  --primary:#023047;
+  --light:#e3d5ca;
+}
+.bgLight{
+  background-color: var(--light);
+}
 .lobster{
   font-family: 'Lobster', cursive;
 /* color:'white' */
+}
+.comfortaa{
+  font-family: 'Comfortaa', cursive;
+  color:'black';
+  
+  font-size:"2rem";
+  font-weight: 700;
+
+  
 }
 *{
   margin:0;

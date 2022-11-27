@@ -60,7 +60,7 @@ const Signup = () => {
             backgroundColor: "#A04EF6",
 
             width: "100vw",
-            height: "100vh",
+            height: "auto",
             display: "flex",
             justifyContent: "center",
           }}
@@ -99,6 +99,7 @@ const Signup = () => {
               <Box sx={{ margin: "0.5rem" }}>
                 <TextField
                   focused
+                  size="small"
                   color="secondary"
                   label="Enter Email Address"
                   variant="outlined"
@@ -110,6 +111,8 @@ const Signup = () => {
               <Box sx={{ margin: "0.5rem" }}>
                 <TextField
                   focused
+                  size="small"
+
                   color="secondary"
                   label="Enter Password"
                   type="password"
@@ -122,6 +125,8 @@ const Signup = () => {
               <Box sx={{ margin: "0.5rem" }}>
                 <TextField
                   focused
+                  size="small"
+                  
                   color="secondary"
                   label="Enter First Name"
                   variant="outlined"
@@ -133,6 +138,8 @@ const Signup = () => {
               <Box sx={{ margin: "0.5rem" }}>
                 <TextField
                   focused
+                  size="small"
+                  
                   color="secondary"
                   label="Enter Last Name"
                   variant="outlined"
@@ -144,6 +151,8 @@ const Signup = () => {
               <Box sx={{ margin: "0.5rem" }}>
                 <TextField
                   focused
+                  size="small"
+                  
                   color="secondary"
                   label="Enter Contact"
                   variant="outlined"
@@ -164,6 +173,8 @@ const Signup = () => {
                 <TextField
                   select
                   label="Select Gender"
+                  size="small"
+                  
                   value={gender}
                   onChange={(e) => {
                     setGender(e.target.value);

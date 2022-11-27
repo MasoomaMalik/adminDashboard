@@ -1,12 +1,19 @@
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import Signup from '../screen/signup'
 import Login from '../screen/login'
-// import Home from '../screen/home'
-import Result from '../screen/result'
-import CourseForm from '../screen/courseForm'
-import CourseFormResult from '../screen/courseFormResult'
+// import {CourseForm} from '../screen/adminDashboardScreens/courseForm'
+// import {CourseFormResult} from '../screen/adminDashboardScreens/courseFormResult'
+
 import Home from '../screen/userRegistrationForm'
 import Dashboard from '../screen/adminDashboard'
+import FormSubmitMessage from '../screen/formSubmitMessage'
+import UsersRecord from '../screen/adminDashboardScreens/usersRecord'
+import CourseFormResult from '../screen/adminDashboardScreens/courseFormResult'
+import CourseForm from '../screen/adminDashboardScreens/courseForm'
+import QuizForm from '../screen/adminDashboardScreens/quizForm'
+import QuizList_Preview from '../screen/adminDashboardScreens/quizResult'
+import QuizResult from '../screen/adminDashboardScreens/quizResult'
+import Quiz from '../screen/quiz'
 
 function AppRouter() {
 
@@ -16,12 +23,17 @@ function AppRouter() {
 
             <Routes>
                 <Route path="/" element={<Signup/> }/>
-                <Route path="result" element={<Result/> }/>
-                <Route path="courseFormResult" element={<CourseFormResult/> }/>
                 <Route path="login" element={<Login/> }/>
-                <Route path="courseForm" element={<CourseForm/> }/>
                 <Route path="adminDashboard/:id" element={<Dashboard/> }/>
-                <Route path="userRegistrationForm/:id" element={<Home/> }/>
+                {/* <Route path="adminDashboard/:id/usersRecord" element={<UsersRecord/> }/> */}
+                <Route path="adminDashboard/usersRecord" element={<UsersRecord/> }/>
+                <Route path="adminDashboard/courseForm" element={<CourseForm/> }/>
+                <Route path="adminDashboard/courseFormResult" element={<CourseFormResult/> }/>
+                <Route path="adminDashboard/quizForm" element={<QuizForm/> }/>
+                <Route path="adminDashboard/quizResult" element={<QuizResult/> }/>
+                <Route path="userRegistrationForm" element={<Home/> }/>
+                <Route path="quiz" element={<Quiz/> }/>
+                <Route path="formSubmitMessage" element={<FormSubmitMessage/> }/>
             </Routes>
         </Router>
         </>

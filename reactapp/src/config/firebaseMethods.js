@@ -76,7 +76,7 @@ let sendData = (obj, nodeName, dataId) => {
       obj.dataId = push(addRef).key;
       postRef = ref(db, `${nodeName}/${obj.dataId}`);
     }
-    let reference=ref(db,nodeName)
+    let reference=ref(db,`${nodeName}/${obj.dataId}`)
     set(reference, obj)
       .then((res) => {
         resolve(`data added on ${nodeName}`);
@@ -91,46 +91,75 @@ let sendData = (obj, nodeName, dataId) => {
 let getData = (nodeName, dataId) => {
   
   return new Promise((resolve, reject) => {
-    // onValue(
-    //   reference,
-    //   (snapshot) => {
-      //     if (snapshot.exists()) {
-        //       let data = snapshot.val();
-        //       if (dataId) {
-          //         // console.log(data);
-
-          //         resolve(data);
-          //       } else {
-            //         console.log(data);
-            //         let tempArr=[]
-            //         tempArr = Object.values(data);
-            //         console.log(tempArr);
-            //         // console.log(Object.values(tempArr));
-            //         resolve(tempArr);
-            //       }
-            //     } else {
-              //       reject("no data found");
-              //     }
-              //   },
-              //   { onlyOnce: false }
-              // );
-              
-              let reference = ref(db, `${nodeName}/${dataId ? dataId : ""}`);
-    // const commentsRef = ref(db, 'post-comments/' + postId);
-    onChildAdded(reference, (snapshot) => {
-      if (snapshot.exists()) {
+    let reference = ref(db, `${nodeName}/${dataId ? dataId : ""}`);
+    onValue(
+      reference,
+      (snapshot) => {
+          if (snapshot.exists()) {
               let data = snapshot.val();
               if (dataId) {
                   // console.log(data);
 
                   resolve(data);
                 } else {
-                    // console.log(data);
-                    let tempArr=[]
-                    tempArr = Object.values(data);
-                    // console.log(tempArr);
-                    // console.log(Object.values(tempArr));
-                    resolve(tempArr);
+                    console.log(data);
+                    
+                    resolve(Object.values(data));
+                  }
+                } else {
+                    reject("no data found");
+                  }
+                },
+                { onlyOnce: false }
+              );
+              
+    // const commentsRef = ref(db, 'post-comments/' + postId);
+   
+   //onChildAdded
+//     onChildAdded(reference, (snapshot) => {
+//       if (snapshot.exists()) {
+//               let data = snapshot.val();
+//               if (dataId) {
+//                   console.log(data);
+
+//                   resolve(data);
+//                 } else {
+//                     console.log(data);
+//                     resolve(data)
+                  
+//                   }
+//                 } else {
+//                     reject("no data found");
+//                   }
+//                 },
+//                 { onlyOnce: false }
+            
+// );
+    
+
+
+  });
+};
+
+let getDataOnChild = (nodeName, dataId) => {
+  
+  return new Promise((resolve, reject) => {
+    let reference = ref(db, `${nodeName}/${dataId ? dataId : ""}`);
+    
+              
+    // const commentsRef = ref(db, 'post-comments/' + postId);
+  
+    onChildAdded(reference, (snapshot) => {
+      if (snapshot.exists()) {
+              let data = snapshot.val();
+              if (dataId) {
+                  console.log(data);
+
+                  resolve(data);
+                } else {
+                    console.log(data);
+                    resolve(data)
+                  
                   }
                 } else {
                     reject("no data found");
@@ -144,4 +173,4 @@ let getData = (nodeName, dataId) => {
 
   });
 };
-export { signUpUser, loginUser, checkUser, sendData, getData };
+export { signUpUser, loginUser, checkUser, sendData, getData,getDataOnChild };

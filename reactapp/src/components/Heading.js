@@ -1,13 +1,14 @@
 import { Box } from '@mui/system'
 import React from 'react'
 
-const Heading = ({title}) => {
+const Heading = ({justifyContent,title,color}) => {
   return (
    <>
    <Box sx={{
-     color:'#9c27b0',
+     color:color,
 // color:'secondary',
     display:'flex',
+    // dataId ? dataId : ""
     justifyContent:'center',
     fontSize:{md:'1.5rem',sx:'0.75rem'},
     margin:1,
